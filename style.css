@@ -372,6 +372,12 @@ body {
     object-fit: contain;
     background: #fff;
     display: block;
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+}
+
+.gallery-img:hover {
+    opacity: 0.85;
 }
 
 .gallery-controls {

@@ -165,7 +165,7 @@
                     <p class="project-company">INS Engineering · Dec 2025 – Mar 2026</p>
                     <p>Developed a Fortran User Defined Model in PSSE to manage active and reactive power for up to 4 downstream inverters. Added control loops for frequency support, ramp rate, and AVR with line drop compensation and droop control.</p>
                     <div class="project-gallery" id="gallery-indie-ppc">
-                        <img class="gallery-img" src="images/indie-ppc/1_PowerReference_DirectQ_Qpriority.png" alt="Power Reference Direct Q Priority">
+                        <img class="gallery-img" src="images/indie-ppc/1_PowerReference_DirectQ_Qpriority.png" alt="Power Reference Direct Q Priority" onclick="openLightbox(this.src, this.alt)" title="Click to enlarge">
                         <div class="gallery-controls">
                             <button class="gallery-btn" onclick="changeSlide('indie-ppc', -1)">&#8249;</button>
                             <span class="gallery-counter"><span class="current-slide">1</span> / 31</span>
@@ -441,15 +441,38 @@
             <div class="contact-links">
                 <a href="mailto:oktarico.pradana@utexas.edu" class="contact-btn">Email Me</a>
                 <a href="https://www.linkedin.com/in/oktarico/" class="contact-btn">LinkedIn</a>
-                <a href="https://github.com/oktaricopradana" class="contact-btn">GitHub</a>
                 <a href="https://scholar.google.com/citations?user=p3MCUTUAAAAJ" class="contact-btn">Google Scholar</a>
             </div>
             <p class="footer-note">© 2026 Oktarico Susilatama Putra Pradana · Power Systems Engineer</p>
         </div>
     </footer>
 
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="closeLightbox()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; flex-direction:column; cursor:zoom-out;">
+        <img id="lightbox-img" src="" alt="" style="max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px; box-shadow:0 0 60px rgba(0,217,255,0.2);">
+        <p id="lightbox-caption" style="color:#9898b0; margin-top:1rem; font-size:0.9rem; text-align:center;"></p>
+        <p style="color:#555; font-size:0.8rem; margin-top:0.5rem;">Click anywhere or press Esc to close</p>
+    </div>
+
     <script>
         // Gallery data
+        // Lightbox
+        function openLightbox(src, caption) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-caption').textContent = caption;
+            document.getElementById('lightbox').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
         var galleryData = {
             'indie-ppc': [
                 '1_PowerReference_DirectQ_Qpriority.png',
@@ -505,9 +528,10 @@
             var counter = gallery.querySelector('.current-slide');
 
             img.src = 'images/' + galleryId + '/' + images[idx];
-            img.alt = images[idx].replace('.png', '');
+            img.alt = images[idx].replace('.png', '').replace(/_/g, ' ');
             caption.textContent = images[idx].replace('.png', '').replace(/_/g, ' ');
             counter.textContent = idx + 1;
+            img.onclick = function() { openLightbox(img.src, img.alt); };
         }
     </script>
     <script src="script.js"></script>
