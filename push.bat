@@ -1,8 +1,13 @@
 @echo off
 cd /d "D:\Oktarico\Github\files"
-git add .
-git commit -m "Auto update %date% %time%"
+echo Adding all files...
+git add -A
+echo Committing...
+git commit -m "Update %date% %time%"
+echo Pushing to GitHub...
 git push origin master
 echo.
-echo Done! Your website is now updated on GitHub.
+echo ================================
+echo Done! Website updated on GitHub.
+echo ================================
 pause
