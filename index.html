@@ -165,7 +165,7 @@
                     <p class="project-company">INS Engineering · Dec 2025 – Mar 2026</p>
                     <p>Developed a Fortran User Defined Model in PSSE to manage active and reactive power for up to 4 downstream inverters. Added control loops for frequency support, ramp rate, and AVR with line drop compensation and droop control.</p>
                     <div class="project-gallery" id="gallery-indie-ppc">
-                        <img class="gallery-img" src="images/indie-ppc/1_PowerReference_DirectQ_Qpriority.png" alt="Power Reference Direct Q Priority" onclick="openLightbox(this.src, this.alt)" title="Click to enlarge">
+                        <img class="gallery-img" src="images/indie-ppc/1_PowerReference_DirectQ_Qpriority.png" alt="Power Reference Direct Q Priority" onclick="openLightbox(this.src, this.alt, 'indie-ppc')" title="Click to enlarge">
                         <div class="gallery-controls">
                             <button class="gallery-btn" onclick="changeSlide('indie-ppc', -1)">&#8249;</button>
                             <span class="gallery-counter"><span class="current-slide">1</span> / 31</span>
@@ -448,18 +448,25 @@
     </footer>
 
     <!-- Lightbox -->
-    <div id="lightbox" onclick="closeLightbox()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; flex-direction:column; cursor:zoom-out;">
-        <img id="lightbox-img" src="" alt="" style="max-width:90vw; max-height:85vh; object-fit:contain; border-radius:8px; box-shadow:0 0 60px rgba(0,217,255,0.2);">
-        <p id="lightbox-caption" style="color:#9898b0; margin-top:1rem; font-size:0.9rem; text-align:center;"></p>
-        <p style="color:#555; font-size:0.8rem; margin-top:0.5rem;">Click anywhere or press Esc to close</p>
+    <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; flex-direction:column;">
+        <button onclick="closeLightbox()" style="position:absolute; top:1.2rem; right:1.5rem; background:none; border:none; color:#9898b0; font-size:2rem; cursor:pointer; line-height:1;">✕</button>
+        <button onclick="lightboxSlide(-1)" style="position:absolute; left:1.5rem; background:rgba(255,255,255,0.1); border:1px solid #444; color:#fff; font-size:2.5rem; width:52px; height:52px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&#8249;</button>
+        <img id="lightbox-img" src="" alt="" style="max-width:85vw; max-height:80vh; object-fit:contain; border-radius:8px; box-shadow:0 0 60px rgba(0,217,255,0.2); cursor:default;">
+        <button onclick="lightboxSlide(1)" style="position:absolute; right:1.5rem; background:rgba(255,255,255,0.1); border:1px solid #444; color:#fff; font-size:2.5rem; width:52px; height:52px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&#8250;</button>
+        <p id="lightbox-caption" style="color:#9898b0; margin-top:1rem; font-size:0.9rem; text-align:center; max-width:80vw;"></p>
+        <p id="lightbox-counter" style="color:#555; font-size:0.8rem; margin-top:0.3rem;">1 / 31</p>
     </div>
 
     <script>
         // Gallery data
         // Lightbox
-        function openLightbox(src, caption) {
+        var activeLightboxGallery = null;
+
+        function openLightbox(src, caption, galleryId) {
+            activeLightboxGallery = galleryId || null;
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox-caption').textContent = caption;
+            updateLightboxCounter();
             document.getElementById('lightbox').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -467,10 +474,48 @@
         function closeLightbox() {
             document.getElementById('lightbox').style.display = 'none';
             document.body.style.overflow = '';
+            activeLightboxGallery = null;
+        }
+
+        function lightboxSlide(direction) {
+            if (!activeLightboxGallery) return;
+            var images = galleryData[activeLightboxGallery];
+            if (!images) return;
+
+            if (galleryIndex[activeLightboxGallery] === undefined) galleryIndex[activeLightboxGallery] = 0;
+            galleryIndex[activeLightboxGallery] += direction;
+
+            if (galleryIndex[activeLightboxGallery] < 0) galleryIndex[activeLightboxGallery] = images.length - 1;
+            if (galleryIndex[activeLightboxGallery] >= images.length) galleryIndex[activeLightboxGallery] = 0;
+
+            var idx = galleryIndex[activeLightboxGallery];
+            var filename = images[idx];
+
+            // Update lightbox
+            document.getElementById('lightbox-img').src = 'images/' + activeLightboxGallery + '/' + filename;
+            document.getElementById('lightbox-caption').textContent = filename.replace('.png', '').replace(/_/g, ' ');
+            updateLightboxCounter();
+
+            // Keep card gallery in sync
+            var gallery = document.getElementById('gallery-' + activeLightboxGallery);
+            if (gallery) {
+                gallery.querySelector('.gallery-img').src = 'images/' + activeLightboxGallery + '/' + filename;
+                gallery.querySelector('.gallery-caption').textContent = filename.replace('.png', '').replace(/_/g, ' ');
+                gallery.querySelector('.current-slide').textContent = idx + 1;
+            }
+        }
+
+        function updateLightboxCounter() {
+            if (!activeLightboxGallery) return;
+            var images = galleryData[activeLightboxGallery];
+            var idx = galleryIndex[activeLightboxGallery] || 0;
+            document.getElementById('lightbox-counter').textContent = (idx + 1) + ' / ' + images.length;
         }
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') lightboxSlide(1);
+            if (e.key === 'ArrowLeft') lightboxSlide(-1);
         });
 
         var galleryData = {
@@ -531,7 +576,7 @@
             img.alt = images[idx].replace('.png', '').replace(/_/g, ' ');
             caption.textContent = images[idx].replace('.png', '').replace(/_/g, ' ');
             counter.textContent = idx + 1;
-            img.onclick = function() { openLightbox(img.src, img.alt); };
+            img.onclick = function() { openLightbox(img.src, img.alt, galleryId); };
         }
     </script>
     <script src="script.js"></script>
