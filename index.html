@@ -451,7 +451,9 @@
     <div id="lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:9999; align-items:center; justify-content:center; flex-direction:column;">
         <button onclick="closeLightbox()" style="position:absolute; top:1.2rem; right:1.5rem; background:none; border:none; color:#9898b0; font-size:2rem; cursor:pointer; line-height:1;">✕</button>
         <button onclick="lightboxSlide(-1)" style="position:absolute; left:1.5rem; background:rgba(255,255,255,0.1); border:1px solid #444; color:#fff; font-size:2.5rem; width:52px; height:52px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&#8249;</button>
-        <img id="lightbox-img" src="" alt="" style="max-width:85vw; max-height:80vh; object-fit:contain; border-radius:8px; box-shadow:0 0 60px rgba(0,217,255,0.2); cursor:default;">
+        <div id="lightbox-zoom-container" style="overflow:hidden; display:flex; align-items:center; justify-content:center; max-width:85vw; max-height:80vh;">
+            <img id="lightbox-img" src="" alt="" style="max-width:85vw; max-height:80vh; object-fit:contain; border-radius:8px; box-shadow:0 0 60px rgba(0,217,255,0.2); cursor:zoom-in; transform-origin:center center; transition:transform 0.2s;" oncontextmenu="return false;" ondragstart="return false;">
+        </div>
         <button onclick="lightboxSlide(1)" style="position:absolute; right:1.5rem; background:rgba(255,255,255,0.1); border:1px solid #444; color:#fff; font-size:2.5rem; width:52px; height:52px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;">&#8250;</button>
         <p id="lightbox-caption" style="color:#9898b0; margin-top:1rem; font-size:0.9rem; text-align:center; max-width:80vw;"></p>
         <p id="lightbox-counter" style="color:#555; font-size:0.8rem; margin-top:0.3rem;">1 / 31</p>
@@ -516,6 +518,96 @@
             if (e.key === 'Escape') closeLightbox();
             if (e.key === 'ArrowRight') lightboxSlide(1);
             if (e.key === 'ArrowLeft') lightboxSlide(-1);
+        });
+
+        // Zoom logic
+        var zoomLevel = 1;
+        var isDragging = false;
+        var dragStartX, dragStartY, translateX = 0, translateY = 0;
+
+        function resetZoom() {
+            zoomLevel = 1;
+            translateX = 0;
+            translateY = 0;
+            applyTransform();
+        }
+
+        function applyTransform() {
+            var img = document.getElementById('lightbox-img');
+            img.style.transform = 'scale(' + zoomLevel + ') translate(' + translateX + 'px, ' + translateY + 'px)';
+            img.style.cursor = zoomLevel > 1 ? 'grab' : 'zoom-in';
+        }
+
+        // Scroll to zoom
+        document.getElementById('lightbox').addEventListener('wheel', function(e) {
+            e.preventDefault();
+            var delta = e.deltaY > 0 ? -0.15 : 0.15;
+            zoomLevel = Math.min(5, Math.max(1, zoomLevel + delta));
+            if (zoomLevel === 1) { translateX = 0; translateY = 0; }
+            applyTransform();
+        }, { passive: false });
+
+        // Click to zoom in/out
+        document.getElementById('lightbox-img').addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (zoomLevel === 1) {
+                zoomLevel = 2.5;
+            } else {
+                zoomLevel = 1;
+                translateX = 0;
+                translateY = 0;
+            }
+            applyTransform();
+        });
+
+        // Drag to pan when zoomed
+        document.getElementById('lightbox-img').addEventListener('mousedown', function(e) {
+            if (zoomLevel > 1) {
+                isDragging = true;
+                dragStartX = e.clientX - translateX;
+                dragStartY = e.clientY - translateY;
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging && zoomLevel > 1) {
+                translateX = e.clientX - dragStartX;
+                translateY = e.clientY - dragStartY;
+                applyTransform();
+            }
+        });
+
+        document.addEventListener('mouseup', function() { isDragging = false; });
+
+        // Reset zoom when navigating slides
+        var origLightboxSlide = lightboxSlide;
+        lightboxSlide = function(direction) {
+            resetZoom();
+            origLightboxSlide(direction);
+        };
+
+        // Reset zoom when opening
+        var origOpenLightbox = openLightbox;
+        openLightbox = function(src, caption, galleryId) {
+            resetZoom();
+            origOpenLightbox(src, caption, galleryId);
+        };
+
+        // Image protection — disable right-click and keyboard save on whole page
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+            }
+        });
+
+        // Disable drag on all images
+        document.querySelectorAll('img').forEach(function(img) {
+            img.ondragstart = function() { return false; };
         });
 
         var galleryData = {
