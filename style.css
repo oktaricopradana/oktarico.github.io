@@ -550,6 +550,85 @@ body {
     border: 1px solid var(--color-border);
 }
 
+/* Publication card redesign — Research Outputs style */
+.pub-card {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.pub-number {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    min-width: 2.5rem;
+    line-height: 1.2;
+}
+
+.pub-content {
+    flex: 1;
+}
+
+.pub-citation {
+    color: var(--color-text);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.pub-citation em {
+    font-style: italic;
+    color: var(--color-text);
+}
+
+.pub-doi {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.88rem;
+    word-break: break-all;
+    transition: opacity 0.2s;
+}
+
+.pub-doi:hover {
+    opacity: 0.7;
+}
+
+.pub-meta-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.6rem;
+    align-items: baseline;
+}
+
+.pub-meta-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-alt);
+    padding-top: 0.1rem;
+}
+
+.pub-meta-value {
+    color: var(--color-text-dim);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+/* Affiliations using projects-grid */
+.affiliations {
+    padding: 8rem 0;
+    background: var(--color-surface);
+}
+
+/* Awards using projects-grid */
+.awards {
+    padding: 8rem 0;
+    background: var(--color-bg);
+}
+
 /* Duties/Achievements label */
 .exp-label {
     font-size: 0.78rem;
@@ -693,7 +772,7 @@ body {
 /* Education Grid */
 .education {
     padding: 8rem 0;
-    background: var(--color-surface);
+    background: var(--color-bg);
 }
 
 .education-grid {
