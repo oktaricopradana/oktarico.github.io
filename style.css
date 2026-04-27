@@ -550,6 +550,146 @@ body {
     border: 1px solid var(--color-border);
 }
 
+/* Duties/Achievements label */
+.exp-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-alt);
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Other Research */
+.other-research {
+    padding: 8rem 0;
+    background: var(--color-surface);
+}
+
+/* Affiliations */
+.affiliations {
+    padding: 8rem 0;
+    background: var(--color-bg);
+}
+
+.affiliations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.affil-card {
+    background: var(--color-surface-light);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.affil-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+}
+
+.affil-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.affil-body h3 {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: 0.3rem;
+}
+
+.affil-role {
+    color: var(--color-accent);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.affil-period {
+    color: var(--color-accent-alt);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.affil-desc {
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Awards Section */
+.awards {
+    padding: 8rem 0;
+    background: var(--color-bg);
+}
+
+.awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.award-card {
+    background: var(--color-surface-light);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.award-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent-alt);
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.1);
+}
+
+.award-icon {
+    font-size: 2.2rem;
+    flex-shrink: 0;
+}
+
+.award-body h3 {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+    line-height: 1.4;
+}
+
+.award-org {
+    color: var(--color-accent);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.award-year {
+    color: var(--color-accent-alt);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.award-desc {
+    color: var(--color-text-dim);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
 /* Education Grid */
 .education {
     padding: 8rem 0;
